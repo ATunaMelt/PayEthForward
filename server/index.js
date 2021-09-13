@@ -168,9 +168,9 @@ async function deactivateAwardInDb(event) {
   await singleAward.update({open: 'withdrawn'});
 }
 
-const initListener = () => {
+async function initListener() {
   console.log('starting listener');
-  myContract.events
+  await myContract.events
     .allEvents()
     .on('data', (event) => {
       console.log('\n --------🚀 ', event.event, '\n\n');
@@ -179,7 +179,8 @@ const initListener = () => {
       if (event.event === 'Award_Deactivated') deactivateAwardInDb(event);
     })
     .on('error', console.error);
-};
+  console.log('started listener');
+}
 
 // if this goes down , what next
 let contractListner = initListener();
@@ -205,7 +206,7 @@ cron.schedule('1 * * * *', () => {
 const startListening = () => {
   // start listening (and create a 'server' object representing our server)
   const server = app.listen(PORT, () =>
-    console.log(`Mixing it up on port ${PORT}`)
+    console.log(`Mixing it up on port http://localhost:${PORT}`)
   );
   // set up our socket control center
   const io = socketio(server);
